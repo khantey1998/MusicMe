@@ -5,4 +5,10 @@ public class SongInfo {
 
     public SongInfo() {
     }
+
+    public SongInfo(String title, String singer, String songUrl) {
+        Title = title;
+        Singer = singer;
+        SongUrl = songUrl;
+    }
 }
