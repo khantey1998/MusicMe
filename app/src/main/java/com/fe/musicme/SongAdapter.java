@@ -15,18 +15,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     ArrayList<SongInfo> _songs;
     Context context;
 
-    OnitemClickListener onitemClickListener;
+    OnItemClickListener onItemClickListener;
 
     SongAdapter(Context context,ArrayList<SongInfo> _songs){
         this.context=context;
         this._songs=_songs;
     }
 
-    public interface OnitemClickListener{
-        void onitemClick(Button btn,View view, SongInfo obj, int i);
+    public interface OnItemClickListener{
+        void onItemClick(Button btn,View view, SongInfo obj, int i);
     }
-    public void setOnitemClickListener(OnitemClickListener onitemClickListener){
-        this.onitemClickListener=onitemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onitemClickListener){
+        this.onItemClickListener=onitemClickListener;
     }
     @Override
     public SongHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -37,13 +37,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     @Override
     public void onBindViewHolder(final SongHolder holder, final int position) {
         final SongInfo t= _songs.get(position);
-        holder.Title.setText(t.Title);
-        holder.Singer.setText(t.Singer);
+        holder.Title.setText(t.getTitle());
+        holder.Singer.setText(t.getSinger());
         holder.buttonAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onitemClickListener !=null) {
-                    onitemClickListener.onitemClick(holder.buttonAction, view,t, position);
+                if (onItemClickListener !=null) {
+                    onItemClickListener.onItemClick(holder.buttonAction, view,t, position);
                 }
             }
         });
@@ -59,9 +59,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         Button buttonAction;
         public SongHolder(View itemView) {
             super(itemView);
-            Title=(TextView) itemView.findViewById(R.id.textViewTitle);
-            Singer=(TextView) itemView.findViewById(R.id.textViewSinger);
-            buttonAction=(Button) itemView.findViewById(R.id.button);
+            Title = itemView.findViewById(R.id.textViewTitle);
+            Singer = itemView.findViewById(R.id.textViewSinger);
+            buttonAction = itemView.findViewById(R.id.button);
 
         }
     }

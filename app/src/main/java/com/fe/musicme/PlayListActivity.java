@@ -9,7 +9,7 @@ import android.widget.SeekBar;
 import java.util.ArrayList;
 
 public class PlayListActivity extends AppCompatActivity {
-    private ArrayList<SongInfo>_songs=new ArrayList<SongInfo>();
+    private ArrayList<SongInfo>_songs=new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekBar;
     SongAdapter songAdapter;
@@ -18,8 +18,8 @@ public class PlayListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_list);
-        recyclerView=(RecyclerView) findViewById(R.id.recyclerview);
-        seekBar=(SeekBar) findViewById(R.id.seekbar);
+        recyclerView=findViewById(R.id.recyclerview);
+        seekBar=findViewById(R.id.seekbar);
         songAdapter=new SongAdapter(this,_songs);
     }
 }
