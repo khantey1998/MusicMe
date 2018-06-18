@@ -2,31 +2,31 @@ package com.fe.musicme;
 
 public class SongInfo {
 
-    private String Title, Singer, SongUrl;
+    private String title, singer, songUrl;
     private int id;
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        title = title;
     }
 
     public String getSinger() {
-        return Singer;
+        return singer;
     }
 
     public void setSinger(String singer) {
-        Singer = singer;
+        singer = singer;
     }
 
     public String getSongUrl() {
-        return SongUrl;
+        return songUrl;
     }
 
     public void setSongUrl(String songUrl) {
-        SongUrl = songUrl;
+        songUrl = songUrl;
     }
 
     public int getId() {
@@ -37,9 +37,9 @@ public class SongInfo {
         this.id = id;
     }
 
-    public SongInfo(String title, String singer, String songUrl) {
-        Title = title;
-        Singer = singer;
-        SongUrl = songUrl;
+    public SongInfo(int id,String title, String singer) {
+        this.id = id;
+        this.title = title;
+        this.singer = singer;
     }
 }
