@@ -3,9 +3,12 @@ package com.fe.musicme;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
@@ -123,14 +126,18 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         SongInfo song = listSongs.get(position);
         songTitle = song.getTitle();
         long currSong = song.getId();
-        Uri trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
+        String path = song.getSongUrl();
+        Uri mySongUri=ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
         try {
-            mediaPlayer.setDataSource(getApplicationContext(), trackUri);
+
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
         } catch (Exception e) {
             Log.d("MUSIC SERVICE", "Error setting data source", e);
         }
-        mediaPlayer.prepareAsync();
+        mediaPlayer.start();
     }
+
 
     public void setSong(int songIndex){
         position = songIndex;

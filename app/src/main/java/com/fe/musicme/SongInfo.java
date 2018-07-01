@@ -37,9 +37,10 @@ public class SongInfo {
         this.id = id;
     }
 
-    public SongInfo(int id,String title, String singer) {
+    public SongInfo(int id,String title, String singer, String songUrl) {
         this.id = id;
         this.title = title;
         this.singer = singer;
+        this.songUrl = songUrl;
     }
 }

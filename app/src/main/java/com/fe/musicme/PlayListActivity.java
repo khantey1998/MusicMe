@@ -31,6 +31,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -62,7 +63,6 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
         });
 
         songAdapter=new SongAdapter(this,_songs);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         listView.setAdapter(songAdapter);
 
         mediaplayer=new MediaPlayer();
@@ -163,11 +163,13 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
                     (MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ARTIST);
+
             do {
                 int thisId = idColumn;
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                _songs.add(new SongInfo(thisId, thisTitle, thisArtist));
+                String thisUrl = musicUri.toString();
+                _songs.add(new SongInfo(thisId, thisTitle, thisArtist, thisUrl));
             }
             while (musicCursor.moveToNext());
         }
