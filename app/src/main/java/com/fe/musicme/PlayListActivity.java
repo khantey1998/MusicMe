@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.ListView;
 import android.widget.MediaController.MediaPlayerControl;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -36,7 +38,7 @@ import java.util.Comparator;
 public class PlayListActivity extends AppCompatActivity implements MediaPlayerControl{
 
     private ArrayList<SongInfo>_songs=new ArrayList<>();
-    RecyclerView recyclerView;
+    ListView listView;
     SeekBar seekBar;
     SongAdapter songAdapter;
     MediaPlayer mediaplayer;
@@ -50,53 +52,22 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_list);
-        recyclerView=findViewById(R.id.recyclerview);
+        listView=findViewById(R.id.list_view);
         seekBar=findViewById(R.id.seekbar);
-
-        songAdapter=new SongAdapter(this,_songs);
-
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(recyclerView.getContext(),linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(songAdapter);
-
-        songAdapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(final Button btn, View view, SongInfo obj, int i)
-            {
-                try {
-                    if(btn.getText().toString().equals("stop")){
-                        btn.setText("Play");
-                        mediaplayer.stop();
-                        mediaplayer.reset();
-                        mediaplayer.release();
-                        mediaplayer=null;
-                    }
-                    else {
-                    mediaplayer = new MediaPlayer();
-                    mediaplayer.setDataSource(obj.getSongUrl());
-                    mediaplayer.prepareAsync();
-                    mediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                             mediaPlayer.start();
-                             btn.setText("Stop");
-                        }
-                    });}
-                    }
-                    catch (IOException e){}
-            }
-        });
-
-        mediaplayer=new MediaPlayer();
-        getSongList();
         Collections.sort(_songs, new Comparator<SongInfo>(){
             @Override
             public int compare(SongInfo o1, SongInfo o2) {
                 return o1.getTitle().compareTo(o2.getTitle());
             }
         });
+
+        songAdapter=new SongAdapter(this,_songs);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        listView.setAdapter(songAdapter);
+
+        mediaplayer=new MediaPlayer();
+        getSongList();
+
         
         setMusicController();
     }
@@ -105,9 +76,7 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
-            //get service
             musicSrv = binder.getSevice();
-            //pass list
             musicSrv.setListSongs(_songs);
             musicBound = true;
         }
@@ -179,7 +148,7 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
         });
 
         musicController.setMediaPlayer(this);
-        musicController.setAnchorView(findViewById(R.id.recyclerview));
+        musicController.setAnchorView(findViewById(R.id.list_view));
         musicController.setEnabled(true);
     }
 
@@ -188,14 +157,12 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
         if(musicCursor!=null && musicCursor.moveToFirst()){
-            //get columns
             int titleColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.TITLE);
             int idColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ARTIST);
-            //add songs to list
             do {
                 int thisId = idColumn;
                 String thisTitle = musicCursor.getString(titleColumn);
@@ -225,6 +192,7 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
     }
 
     public void songPicked(View view){
+
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         musicSrv.playSong();
         if(playbackPaused){
@@ -297,51 +265,4 @@ public class PlayListActivity extends AppCompatActivity implements MediaPlayerCo
         return 0;
     }
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-
-    /**
-     * requestPermissions and do something
-     *
-     */
-    public void requestRead() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        } else {
-            readFile();
-        }
-    }
-
-    /**
-     * do you want to do
-     */
-    public void readFile() {
-        // do something
-    }
-
-    /**
-     * onRequestPermissionsResult
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                readFile();
-            } else {
-                // Permission Denied
-                Toast.makeText(PlayListActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 }

@@ -88,8 +88,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        if (mediaPlayer!=null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
         return false;
     }
 
@@ -101,11 +103,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void initMediaPlayer(){
         mediaPlayer.setWakeMode(getApplicationContext(),PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
-
     }
 
     public void setListSongs(ArrayList<SongInfo> listSongs) {
@@ -126,8 +126,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         Uri trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
         try {
             mediaPlayer.setDataSource(getApplicationContext(), trackUri);
-        } catch (IOException e) {
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
+        } catch (Exception e) {
+            Log.d("MUSIC SERVICE", "Error setting data source", e);
         }
         mediaPlayer.prepareAsync();
     }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MusicMe</string>
+    <string name="position">Position</string>
 </resources>
