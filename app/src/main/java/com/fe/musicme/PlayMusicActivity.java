@@ -28,10 +28,10 @@ public class PlayMusicActivity extends AppCompatActivity {
     private ServiceConnection musicConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            musicService = binder.getSevice();
-            musicService.setListSongs(songList);
-            musicBound = true;
+//            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
+//            musicService = binder.getSevice();
+//            musicService.setListSongs(songList);
+//            musicBound = true;
         }
 
         @Override
