@@ -126,11 +126,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         SongInfo song = listSongs.get(position);
         songTitle = song.getTitle();
         long currSong = song.getId();
-        String path = song.getSongUrl();
+        Uri path = Uri.parse(song.getSongUrl());
         Uri mySongUri=ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currSong);
         try {
 
-            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(getApplicationContext(),path);
             mediaPlayer.prepare();
         } catch (Exception e) {
             Log.d("MUSIC SERVICE", "Error setting data source", e);
